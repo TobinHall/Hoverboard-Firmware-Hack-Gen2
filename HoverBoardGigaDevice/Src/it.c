@@ -46,8 +46,8 @@ FlagStatus timedOut = SET;
 uint32_t hornCounter_ms = 0;
 #endif
 
-extern int32_t steer;
-extern int32_t speed;
+extern int32_t vel_slave;
+extern int32_t vel_master;
 extern FlagStatus activateWeakening;
 extern FlagStatus beepsBackwards;
 
@@ -80,8 +80,8 @@ void TIMER13_IRQHandler(void)
 		if (timedOut == RESET)
 		{
 #ifdef MASTER
-			steer = 0;
-			speed = 0;
+			vel_slave = 0;
+			vel_master = 0;
 			beepsBackwards = RESET;
 #endif
 #ifdef SLAVE
