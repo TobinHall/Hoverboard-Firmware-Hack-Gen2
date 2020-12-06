@@ -46,8 +46,8 @@
 #include <math.h>
 
 #ifdef MASTER
-int32_t vel_slave = 0; 							// global variable for steering. -1000 to 1000
-int32_t vel_master = 0; 						// global variable for speed.    -1000 to 1000
+int16_t vel_slave = 0; 							// global variable for steering. -1000 to 1000
+int16_t vel_master = 0; 						// global variable for speed.    -1000 to 1000
 FlagStatus activateWeakening = RESET;			// global variable for weakening
 FlagStatus beepsBackwards = RESET;  			// global variable for beeps backwards
 
@@ -153,11 +153,9 @@ int main (void)
 		}
 		
 		
-		vel_master = vel_slave = 100;
-		
 		pwmMaster = CLAMP(vel_master, -1000, 1000);
 		pwmSlave  = CLAMP(vel_slave,  -1000, 1000);
-		ResetTimeout();
+		
 		
 		// Read charge state
 		chargeStateLowActive = gpio_input_bit_get(CHARGE_STATE_PORT, CHARGE_STATE_PIN);

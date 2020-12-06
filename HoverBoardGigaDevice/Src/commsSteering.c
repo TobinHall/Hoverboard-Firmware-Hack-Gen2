@@ -51,8 +51,8 @@ static uint8_t sUSARTSteerRecordBufferCounter = 0;
 
 void CheckUSARTSteerInput(uint8_t u8USARTBuffer[]);
 
-extern int32_t vel_slave;
-extern int32_t vel_master;
+extern int16_t vel_slave;
+extern int16_t vel_master;
 
 //----------------------------------------------------------------------------
 // Send frame to steer device
@@ -118,17 +118,19 @@ void CheckUSARTSteerInput(uint8_t USARTBuffer[])
 	crc = CalcCRC(USARTBuffer, USART_STEER_RX_BYTES - 3);
 	
 	// Check CRC
-	if ( USARTBuffer[USART_STEER_RX_BYTES - 3] != ((crc >> 8) & 0xFF) ||
-		USARTBuffer[USART_STEER_RX_BYTES - 2] != (crc & 0xFF))
+	if ( USARTBuffer[USART_STEER_RX_BYTES - 2] != ((crc >> 8) & 0xFF) ||
+		USARTBuffer[USART_STEER_RX_BYTES - 3] != (crc & 0xFF))
 	{
 		return;
 	}
 	
 	// Calculate result speed value -1000 to 1000
-	vel_master = (int16_t)((USARTBuffer[1] << 8) | USARTBuffer[2]);
+	//vel_master = (int16_t)((USARTBuffer[1] << 8) | USARTBuffer[2]);
+	memcpy(&vel_master, &USARTBuffer[1], 2);
 	
 	// Calculate result steering value -1000 to 1000
-	vel_slave = (int16_t)((USARTBuffer[3] << 8) | USARTBuffer[4]);
+	//vel_slave = (int16_t)((USARTBuffer[3] << 8) | USARTBuffer[4]);
+	memcpy(&vel_slave, &USARTBuffer[3], 2);
 	
 	// Reset the pwm timout to avoid stopping motors
 	ResetTimeout();
